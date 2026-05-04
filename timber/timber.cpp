@@ -28,8 +28,8 @@ int main ()
         Handle the players input
         ****************************************
         */
-       if (Keyboard::isKeyPressed(Keyboard::Key::Escape))
-       {
+        if (Keyboard::isKeyPressed(Keyboard::Key::Escape))
+        {
            window.close();
         }
         
@@ -47,12 +47,15 @@ int main ()
        ****************************************
        */
 
-       // Clear everything from the last frame window.clear();
-
+       // Clear everything from the last frame
+       window.clear();
+       
        // Draw our game scene here
+       
+       
+       // Show everything we just drew
+       window.display();
 
-
-       // Show everything we just drew window.display();
     }
     return 0; 
 }
