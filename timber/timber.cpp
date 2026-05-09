@@ -27,6 +27,12 @@ int main ()
     // Set the spritebackground to cover the screen
     spriteBackground.setPosition({0,0});
 
+    //Make a tree sprite
+    Texture textureTree;
+    textureTree.loadFromFile("graphics/tree.png");
+    Sprite spriteTree(textureTree);
+    spriteTree.setPosition({810,0});
+
     while (window.isOpen())
     {
         while (const std::optional event = window.pollEvent())
@@ -53,11 +59,11 @@ int main ()
        
        
        
-       /*
-       ****************************************
-       Draw the scene
-       ****************************************
-       */
+        /*
+        ****************************************
+        Draw the scene
+        ****************************************
+        */
 
         
         
@@ -66,11 +72,12 @@ int main ()
        
        // Draw our game scene here
        window.draw(spriteBackground);
-       
+       window.draw(spriteTree);
        // Show everything we just drew
        window.display();
 
     }
+    
     return 0; 
 }
 
