@@ -5,8 +5,11 @@
 // Make code easier to type with "using namespace" using namespace sf;
 using namespace sf;
 
+
 const float TREE_HORIZONTAL_POSITION = 810;
 const float TREE_VERTICAL_POSITION = 0;
+
+
 
 // This is where our game starts from int main()
 int main ()
@@ -35,6 +38,46 @@ int main ()
     textureTree.loadFromFile("graphics/tree.png");
     Sprite spriteTree(textureTree);
     spriteTree.setPosition({TREE_HORIZONTAL_POSITION,TREE_VERTICAL_POSITION});
+
+    //Prepare the bee
+    Texture textureBee;
+    textureBee.loadFromFile("graphics/bee.png");
+    Sprite spriteBee(textureBee);
+    spriteBee.setPosition({0,800});
+
+    //Is the bee currently moving?
+    bool beeActive = false;
+
+    //How fast can the bee fly
+    float beeSpeed = 0.0f;
+
+    //make 3 cloud sprites from 1 texture
+    Texture textureCloud;
+
+    // Load 1 new texture
+    textureCloud.loadFromFile("graphics/cloud.png");
+
+    // 3 new sprites with the same texture
+
+    Sprite spriteCloud1(textureCloud);
+    Sprite spriteCloud2(textureCloud);
+    Sprite spriteCloud3(textureCloud);
+
+    //Position the clouds on the left of the screen
+    // at different heights 
+    spriteCloud1.setPosition({0,0});
+    spriteCloud2.setPosition({0,250});
+    spriteCloud3.setPosition({0,500});
+
+    //Are the clouds currently on screen?
+    bool cloud1Active = false;
+    bool cloud2Active = false;
+    bool cloud3Active = false;
+
+    //How fast is each cloud?
+    float cloud1Speed = 0.0f;
+    float cloud2Speed = 0.0f;
+    float cloud3Speed = 0.0f;
 
     while (window.isOpen())
     {
@@ -75,7 +118,18 @@ int main ()
        
        // Draw our game scene here
        window.draw(spriteBackground);
+
+       // Draw the clouds
+       window.draw(spriteCloud1);
+       window.draw(spriteCloud2);
+       window.draw(spriteCloud3);
+
+       //Draw the tree
        window.draw(spriteTree);
+
+       //Draw the bee
+       window.draw(spriteBee);
+
        // Show everything we just drew
        window.display();
 
