@@ -5,6 +5,9 @@
 // Make code easier to type with "using namespace" using namespace sf;
 using namespace sf;
 
+const float TREE_HORIZONTAL_POSITION = 810;
+const float TREE_VERTICAL_POSITION = 0;
+
 // This is where our game starts from int main()
 int main ()
 {
@@ -31,7 +34,7 @@ int main ()
     Texture textureTree;
     textureTree.loadFromFile("graphics/tree.png");
     Sprite spriteTree(textureTree);
-    spriteTree.setPosition({810,0});
+    spriteTree.setPosition({TREE_HORIZONTAL_POSITION,TREE_VERTICAL_POSITION});
 
     while (window.isOpen())
     {
