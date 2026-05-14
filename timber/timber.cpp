@@ -79,6 +79,8 @@ int main ()
     float cloud2Speed = 0.0f;
     float cloud3Speed = 0.0f;
 
+    Clock clock;
+
     while (window.isOpen())
     {
         while (const std::optional event = window.pollEvent())
@@ -102,8 +104,43 @@ int main ()
         Update the scene
         ****************************************
         */
-       
-       
+        //Measure time
+        Time dt = clock.restart();
+
+        //Setup the bee
+        if (!beeActive)
+        {
+
+            //How fast is the bee
+            srand((int)time(0));
+            beeSpeed = (rand() % 200) + 200;
+
+            //How high is the bee
+            srand((int)time(0) * 10);
+            float height = (rand() % 1350) + 500;
+            spriteBee.setPosition({2000, height});
+            beeActive = true;
+
+
+        }
+        else
+        //move the bee
+        {
+
+            spriteBee.setPosition({
+                spriteBee.getPosition().x - (beeSpeed * dt.asSeconds()),
+                spriteBee.getPosition().y
+            });
+            
+            // Has the bee reached the left-hand edge of the screen?
+            if (spriteBee.getPosition().x < -100)
+            {
+                //set it up ready to be a whole new bee next frame
+                beeActive = false;
+            }
+        }
+
+
        
         /*
         ****************************************
@@ -134,7 +171,7 @@ int main ()
        window.display();
 
     }
+
     
     return 0; 
 }
-
