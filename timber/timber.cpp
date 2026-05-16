@@ -1,10 +1,9 @@
 // Include important libraries here
 #include <SFML/Graphics.hpp>
-#include <optional> 
+#include <optional>  
 
 // Make code easier to type with "using namespace" using namespace sf;
 using namespace sf;
-
 
 const float TREE_HORIZONTAL_POSITION = 810;
 const float TREE_VERTICAL_POSITION = 0;
@@ -14,6 +13,9 @@ const float TREE_VERTICAL_POSITION = 0;
 // This is where our game starts from int main()
 int main ()
 {
+    
+
+
     // Create a video mode object VideoMode vm(1920, 1080);
     VideoMode vm({1920,1080});
     
