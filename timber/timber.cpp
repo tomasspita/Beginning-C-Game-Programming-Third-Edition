@@ -1,6 +1,7 @@
 // Include important libraries here
-#include <SFML/Graphics.hpp>
+#include <sstream>
 #include <optional>  
+#include <SFML/Graphics.hpp>
 
 // Make code easier to type with "using namespace" using namespace sf;
 using namespace sf;
@@ -85,6 +86,38 @@ int main ()
 
     //Track wether the game is running
     bool paused = true;
+
+    //Draw some text
+    int score = 0;
+
+    
+    //We need to choose a font
+    Font font;
+    font.openFromFile("fonts/KOMIKAP_.ttf");
+    
+    Text messageText(font);
+    Text scoreText(font);
+    
+    //assign the actual mesage
+    messageText.setString("Press Enter to start!");
+    scoreText.setString("score = 0");
+
+
+    // Make it really big
+    messageText.setCharacterSize(75);
+    scoreText.setCharacterSize(100);
+
+    // Choose a color
+    messageText.setFillColor(Color::White);
+    scoreText.setFillColor(Color::White);
+
+    // Position the text
+    FloatRect textRect = messageText.getLocalBounds();
+    messageText.setOrigin(textRect.getCenter());
+
+    messageText.setPosition({1920 / 2.0f, 1080 / 2.0f});
+
+    scoreText.setPosition({20, 20});
 
     while (window.isOpen())
     {
@@ -243,6 +276,11 @@ int main ()
                     cloud3Active = false;
                 }
             }
+             
+            // Update the score text
+            std::stringstream ss;
+            ss << "Score = " << score;
+            scoreText.setString(ss.str());
             
         }
         /*
@@ -266,9 +304,18 @@ int main ()
 
        //Draw the tree
        window.draw(spriteTree);
-
+        
        //Draw the bee
        window.draw(spriteBee);
+
+       //Draw the score
+       window.draw(scoreText);
+
+       if (paused)
+       {
+        // Draw or message
+        window.draw(messageText);
+       }
 
        // Show everything we just drew
        window.display();
