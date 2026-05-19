@@ -2,7 +2,7 @@
 #include <sstream>
 #include <optional>  
 #include <SFML/Graphics.hpp>
-
+#include <iostream>
 // Make code easier to type with "using namespace" using namespace sf;
 using namespace sf;
 
@@ -27,7 +27,13 @@ int main ()
     Texture textureBackground;
 
     //Charge a graphic in the texture
-    textureBackground.loadFromFile("graphics/background.png");
+    if (!textureBackground.loadFromFile("graphics/background.png")) {
+
+        std::cout << "Error loading background";
+        return 1;
+    }
+
+    
 
     //Create a sprite, Attach the texture to the sprite
     Sprite spriteBackground(textureBackground);
@@ -38,13 +44,26 @@ int main ()
 
     //Make a tree sprite
     Texture textureTree;
-    textureTree.loadFromFile("graphics/tree.png");
+
+    if (!textureTree.loadFromFile("graphics/tree.png")) {
+
+        std::cout << "Error loading tree.png";
+        return 1;
+    }
+
     Sprite spriteTree(textureTree);
     spriteTree.setPosition({TREE_HORIZONTAL_POSITION,TREE_VERTICAL_POSITION});
 
     //Prepare the bee
     Texture textureBee;
-    textureBee.loadFromFile("graphics/bee.png");
+
+    if (!textureBee.loadFromFile("graphics/bee.png")) {
+
+        std::cout << "Error loading bee.png";
+        return 1;
+    }
+
+
     Sprite spriteBee(textureBee);
     spriteBee.setPosition({0,800});
 
@@ -58,7 +77,12 @@ int main ()
     Texture textureCloud;
 
     // Load 1 new texture
-    textureCloud.loadFromFile("graphics/cloud.png");
+    if (!textureCloud.loadFromFile("graphics/cloud.png")) {
+
+        std::cout << "Error loading cloud.png";
+        return 1;
+
+    }
 
     // 3 new sprites with the same texture
 
@@ -105,7 +129,11 @@ int main ()
     
     //We need to choose a font
     Font font;
-    font.openFromFile("fonts/KOMIKAP_.ttf");
+    if (!font.openFromFile("fonts/KOMIKAP_.ttf")) {
+
+        std::cout << "Error loading fonts";
+        return 1;
+    }
     
     Text messageText(font);
     Text scoreText(font);
@@ -154,7 +182,9 @@ int main ()
         {
             paused = false;
             score = 0;
-            timeRemaining = 6;
+            if (timeRemaining <= 0.0f) {
+                timeRemaining = 6;
+            }
         }
 
         /*
