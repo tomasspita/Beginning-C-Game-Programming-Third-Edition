@@ -68,4 +68,12 @@ int main() {
         cout << x << endl;
     }
 
+    int uselessArray[10];
+    
+    for (int i = 0; i < 10; i++)
+    {
+        uselessArray[i] = i;
+        cout << uselessArray[i] << endl;
+    }
+
 }
