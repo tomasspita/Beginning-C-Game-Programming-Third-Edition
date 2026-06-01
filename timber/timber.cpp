@@ -9,14 +9,27 @@ using namespace sf;
 const float TREE_HORIZONTAL_POSITION = 810;
 const float TREE_VERTICAL_POSITION = 0;
 
+// Function declaration
+void updateBranches(int seed);
 
+const int NUM_BRANCHES = 6;
+
+Texture textureBranch;
+
+
+//Sprite branches[NUM_BRANCHES];
+
+// Where is the player/branch?
+// Left or Right
+enum class side {LEFT, RIGHT, NONE};
+side branchPositions[NUM_BRANCHES];
 
 // This is where our game starts from int main()
 int main ()
 {
     
-
-
+    
+    
     // Create a video mode object VideoMode vm(1920, 1080);
     VideoMode vm({1920,1080});
     
@@ -25,89 +38,89 @@ int main ()
     
     //create a texture to save a graphic in the GPU
     Texture textureBackground;
-
+    
     //Charge a graphic in the texture
     if (!textureBackground.loadFromFile("graphics/background.png")) {
-
+        
         std::cout << "Error loading background";
         return 1;
     }
-
     
-
+    
+    
     //Create a sprite, Attach the texture to the sprite
     Sprite spriteBackground(textureBackground);
     
-
+    
     // Set the spritebackground to cover the screen
     spriteBackground.setPosition({0,0});
-
+    
     //Make a tree sprite
     Texture textureTree;
-
+    
     if (!textureTree.loadFromFile("graphics/tree.png")) {
-
+        
         std::cout << "Error loading tree.png";
         return 1;
     }
-
+    
     Sprite spriteTree(textureTree);
     spriteTree.setPosition({TREE_HORIZONTAL_POSITION,TREE_VERTICAL_POSITION});
-
+    
     //Prepare the bee
     Texture textureBee;
-
+    
     if (!textureBee.loadFromFile("graphics/bee.png")) {
-
+        
         std::cout << "Error loading bee.png";
         return 1;
     }
-
-
+    
+    
     Sprite spriteBee(textureBee);
     spriteBee.setPosition({0,800});
-
+    
     //Is the bee currently moving?
     bool beeActive = false;
-
+    
     //How fast can the bee fly
     float beeSpeed = 0.0f;
-
+    
     //make 3 cloud sprites from 1 texture
     Texture textureCloud;
-
+    
     // Load 1 new texture
     if (!textureCloud.loadFromFile("graphics/cloud.png")) {
-
+        
         std::cout << "Error loading cloud.png";
         return 1;
-
+        
     }
-
+    
     // 3 new sprites with the same texture
-
+    
     Sprite spriteCloud1(textureCloud);
     Sprite spriteCloud2(textureCloud);
     Sprite spriteCloud3(textureCloud);
-
+    
     //Position the clouds on the left of the screen
     // at different heights 
     spriteCloud1.setPosition({0,0});
     spriteCloud2.setPosition({0,250});
     spriteCloud3.setPosition({0,500});
-
+    
     //Are the clouds currently on screen?
     bool cloud1Active = false;
     bool cloud2Active = false;
     bool cloud3Active = false;
-
+    
     //How fast is each cloud?
     float cloud1Speed = 0.0f;
     float cloud2Speed = 0.0f;
     float cloud3Speed = 0.0f;
-
+    
     Clock clock;
-
+    
     // Time bar
     RectangleShape timeBar;
     float timeBarStartWidth = 400;
@@ -115,22 +128,22 @@ int main ()
     timeBar.setSize(Vector2f(timeBarStartWidth, timeBarHeight));
     timeBar.setFillColor(Color::Red);
     timeBar.setPosition({(1920/2) - timeBarStartWidth / 2, 980});
-
+    
     Time gameTimeTotal;
     float timeRemaining = 6.0f;
     float timeBarWidthPerSecond = timeBarStartWidth / timeRemaining;
-
+    
     //Track wether the game is running
     bool paused = true;
-
+    
     //Draw some text
     int score = 0;
-
+    
     
     //We need to choose a font
     Font font;
     if (!font.openFromFile("fonts/KOMIKAP_.ttf")) {
-
+        
         std::cout << "Error loading fonts";
         return 1;
     }
@@ -141,24 +154,49 @@ int main ()
     //assign the actual mesage
     messageText.setString("Press Enter to start!");
     scoreText.setString("score = 0");
-
-
+    
+    
     // Make it really big
     messageText.setCharacterSize(75);
     scoreText.setCharacterSize(100);
-
+    
     // Choose a color
     messageText.setFillColor(Color::White);
     scoreText.setFillColor(Color::White);
-
+    
     // Position the text
     FloatRect textRect = messageText.getLocalBounds();
     messageText.setOrigin(textRect.getCenter());
-
+    
     messageText.setPosition({1920 / 2.0f, 1080 / 2.0f});
-
+    
     scoreText.setPosition({20, 20});
+    
+    // Prepare 6 branches
+    
+    
+    // Set the texture for each branch srpite
+    
+    textureBranch.loadFromFile("graphics/branch.png");
+    
+    std::array<sf::Sprite, NUM_BRANCHES> branches = {
+        sf::Sprite(textureBranch),
+        sf::Sprite(textureBranch),
+        sf::Sprite(textureBranch),
+        sf::Sprite(textureBranch),
+        sf::Sprite(textureBranch),
+        sf::Sprite(textureBranch),
+    };
+    
+    for (int i = 0; i < NUM_BRANCHES; i++) {
+        // branches[i].setTexture(textureBranch);
+        branches[i].setPosition({-2000, -2000});
 
+        // Set the sprite's origin to dead centre
+        // We can then spin it round without changing it's position
+        branches[i].setOrigin({220,20});
+    }
+    
     while (window.isOpen())
     {
         while (const std::optional event = window.pollEvent())
@@ -345,6 +383,36 @@ int main ()
             std::stringstream ss;
             ss << "Score = " << score;
             scoreText.setString(ss.str());
+
+            // update the branch sprites
+            for (int i = 0; i < NUM_BRANCHES; i++)
+            {
+
+                float height = i * 150;
+
+                if (branchPositions[i] == side::LEFT)
+                {
+                    // Move the sprite to the left side
+                    branches[i].setPosition({610, height});
+
+                    // Flip the sprite round the other way
+                    branches[i].setRotation(degrees(180));
+                }
+                else if (branchPositions[i] == side::RIGHT)
+                {
+                    //Move the sprite to the right side
+                    branches[i].setPosition({1330, height});
+
+                    // Set the sprite rotation to normal
+                    
+                    branches[i].setRotation(degrees(0));
+                }
+                else
+                {
+                    // Hide the branch
+                    branches[i].setPosition({3000, height});
+                }
+            }
             
         }
         /*
@@ -365,6 +433,12 @@ int main ()
        window.draw(spriteCloud1);
        window.draw(spriteCloud2);
        window.draw(spriteCloud3);
+
+       // Draw the branches
+       for (int i = 0; i < NUM_BRANCHES; i++)
+       {
+            window.draw(branches[i]);
+       }
 
        //Draw the tree
        window.draw(spriteTree);
@@ -391,4 +465,36 @@ int main ()
 
     
     return 0; 
+}
+
+
+// Function definition
+void updateBranches (int seed)
+{
+    // Move all the branches down one place
+    for (int j = NUM_BRANCHES - 1; j > 0; j--)
+    {
+        branchPositions[j] = branchPositions[j - 1];
+    }
+
+    // Spawn a new branch at position 0
+    // LEFT, RIGHT or NONE
+    srand((int)time(0)+seed);
+    int r = (rand() % 5);
+
+    switch (r)
+    {
+        case 0:
+        branchPositions[0] = side::LEFT;
+        break;
+
+        case 1:
+        branchPositions[0] = side::RIGHT;
+        break;
+
+        default:
+        
+        branchPositions[0] = side::NONE;
+        break;
+    }
 }
