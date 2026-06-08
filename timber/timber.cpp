@@ -231,6 +231,9 @@ int main ()
     bool logActive = false;
     float logSpeedX = 1000;
     float logSpeedY = -1500;
+
+    // Control the player input
+    bool acceptInput = false;
     
     while (window.isOpen())
     {
@@ -245,6 +248,8 @@ int main ()
         Handle the players input
         ****************************************
         */
+        
+        
         if (Keyboard::isKeyPressed(Keyboard::Key::Escape))
         {
            window.close();
@@ -254,10 +259,28 @@ int main ()
         if (Keyboard::isKeyPressed(Keyboard::Key::Enter))
         {
             paused = false;
+
+            // Reset the time and score
             score = 0;
-            if (timeRemaining <= 0.0f) {
+            // if (timeRemaining <= 0.0f) {
                 timeRemaining = 6;
-            }
+            
+            //}
+
+                // Make all the branches disappear
+                for (int i = 1; i < NUM_BRANCHES; i++)
+                {
+                    branchPositions[i] = side::NONE;
+                }
+
+                // Make sure the gravestone is hidden
+                spriteRIP.setPosition({675, 2000});
+
+                // Move the player into position
+                spritePlayer.setPosition({675, 660});
+
+                acceptInput = true;
+            
         }
 
         /*
