@@ -237,17 +237,45 @@ int main ()
     
     while (window.isOpen())
     {
-        while (const std::optional event = window.pollEvent())
-        {
-            if (event->is<Event::Closed>())
-                window.close();
-        }
-
         /*
         ****************************************
         Handle the players input
         ****************************************
         */
+        // const std::optional event = window.pollEvent();
+        while (const std::optional event = window.pollEvent())
+        // while (event)
+        {
+            if (event->is<Event::Closed>())
+                window.close();
+
+            if ((event->is<Event::KeyReleased>()) && !paused)
+            {
+                // Listen for key presses again
+                acceptInput = true;
+
+                // hide the axe
+                spriteAxe.setPosition({2000,
+                    spriteAxe.getPosition().y});
+            }
+        }
+
+
+         // Event event;
+
+        // while (window.pollEvent(event))
+        // while (event)
+        // {
+        //     if ((event->is<Event::KeyReleased>()) && !paused)
+        //     {
+        //         // Listen for key presses again
+        //         acceptInput = true;
+
+        //         // hide the axe
+        //         spriteAxe.setPosition({2000,
+        //             spriteAxe.getPosition().y});
+        //     }
+        // }
         
         
         if (Keyboard::isKeyPressed(Keyboard::Key::Escape))
@@ -281,6 +309,69 @@ int main ()
 
                 acceptInput = true;
             
+        }
+
+        // Wrap the player controls to
+        // Make sure we're accepting input
+        if (acceptInput)
+        {
+            // More code here next... LOL
+
+            // First handle pressing the D cursor key
+            if (Keyboard::isKeyPressed(Keyboard::Key::D))
+            {
+                // Make sure the player is on the right
+                playerSide = side::RIGHT;
+
+                score++;
+
+                // Add to the amount of time remaining
+                timeRemaining += (2 / score) + .15;
+
+                spriteAxe.setPosition({AXE_POSITION_RIGHT,
+                    spriteAxe.getPosition().y});
+
+                spritePlayer.setPosition({1200, 720});
+
+                // Update the branches
+                updateBranches(score);
+
+                // Set the log flying to the left
+                spriteLog.setPosition({810, 720});
+                logSpeedX = -5000;
+                logActive = true;
+
+                acceptInput = false;
+            }
+
+            // Handle the A cursor key
+
+            if (Keyboard::isKeyPressed(Keyboard::Key::A))
+            {
+                // Make sure the player is ont he left
+                playerSide = side::LEFT;
+
+                score++;
+
+                // Add to the amount of time remaining
+                timeRemaining += (2 / score) + .15;
+
+                spriteAxe.setPosition({AXE_POSITION_LEFT,
+                    spriteAxe.getPosition().y});
+
+                spritePlayer.setPosition({580, 720});
+
+                // update the branches
+                updateBranches(score);
+
+                // set the log flying
+                spriteLog.setPosition({810, 720});
+                logSpeedX = 5000;
+                logActive = true;
+
+
+                acceptInput = false;
+            }
         }
 
         /*
@@ -471,8 +562,29 @@ int main ()
                     branches[i].setPosition({3000, height});
                 }
             }
+
+            // Handle a flying Log
+            if (logActive)
+            {
+
+                spriteLog.setPosition({
+                    spriteLog.getPosition().x +
+                        (logSpeedX * dt.asSeconds()),
+                    spriteLog.getPosition().y +
+                        (logSpeedY * dt.asSeconds())
+                });
+
+                // Has the log reached the right hand edge?
+                if (spriteLog.getPosition().x < -100 ||
+                    spriteLog.getPosition().x > 2000)
+                {
+                    // Set it up ready to be a whole new log next frame
+                    logActive = false;
+                    spriteLog.setPosition({810, 720});
+                }
+            }
             
-        }
+        } // End if (!paused)
         /*
         ****************************************
         Draw the scene
