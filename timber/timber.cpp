@@ -1,8 +1,10 @@
 // Include important libraries here
+#include <iostream>
 #include <sstream>
 #include <optional>  
 #include <SFML/Graphics.hpp>
-#include <iostream>
+#include <SFML/Audio.hpp>
+
 // Make code easier to type with "using namespace" using namespace sf;
 using namespace sf;
 
@@ -234,6 +236,30 @@ int main ()
 
     // Control the player input
     bool acceptInput = false;
+
+    // Prepare the sound
+    SoundBuffer chopBuffer;
+    if (!chopBuffer.loadFromFile("sounds/chop.wav"))
+    {
+        std::cout <<"didnt load chop.wav";
+    }
+    Sound chop(chopBuffer); 
+
+    SoundBuffer deathBuffer;
+    if (!deathBuffer.loadFromFile("sounds/death.wav"))
+    {
+        std::cout <<"didnt load death.wav";
+    }
+    Sound death(deathBuffer);
+
+    // Out of time
+    SoundBuffer ootBuffer;
+    if (!ootBuffer.loadFromFile("sounds/out_of_time.wav"))
+    {
+        std::cout <<"didnt load outOfTime.wav";
+    }
+    Sound outOfTime(ootBuffer);
+    
     
     while (window.isOpen())
     {
@@ -342,6 +368,9 @@ int main ()
                 logActive = true;
 
                 acceptInput = false;
+
+                // Play a chop sound
+                chop.play();
             }
 
             // Handle the A cursor key
@@ -371,6 +400,9 @@ int main ()
 
 
                 acceptInput = false;
+
+                // Play a chop sound
+                chop.play();
             }
         }
 
@@ -403,7 +435,11 @@ int main ()
                 FloatRect textRect = messageText.getLocalBounds();
                 messageText.setOrigin(textRect.getCenter());
 
+            
                 messageText.setPosition({1920 / 2.0f, 1080 / 2.0f});
+
+                // Play the out of time sound
+                outOfTime.play();
              }
             
             //Setup the bee
@@ -604,6 +640,9 @@ int main ()
                 FloatRect textRect = messageText.getLocalBounds();
 
                 messageText.setOrigin(textRect.getCenter());
+
+                // Play the death sound
+                death.play();
             }
             
         } // End if (!paused)
