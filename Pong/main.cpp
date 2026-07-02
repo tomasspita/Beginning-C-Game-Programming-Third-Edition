@@ -1,4 +1,5 @@
 #include "Bat.h"
+#include "Ball.h"
 #include <sstream>
 #include <cstdlib>
 #include <SFML/Graphics.hpp>
@@ -17,6 +18,8 @@ int main()
 
     // Create a bat a the bottom center of the screen
     Bat bat(1920 / 2, 1080 -20);
+    // Create a ball
+    Ball ball(1920 / 2,0);
     // We will add a ball in the next chapter
     // A cool retry-style font
     Font font;
@@ -81,6 +84,7 @@ int main()
         */
        Time dt = clock.restart();
        bat.update(dt);
+       ball.update(dt);
        // Update the HUD text
        std::stringstream ss;
        ss << "score:" << score << " lives:" << lives;
@@ -96,6 +100,7 @@ int main()
         window.clear();
         window.draw(hud);
         window.draw(bat.getShape());
+        window.draw(ball.getShape());
         window.display();
 
 
