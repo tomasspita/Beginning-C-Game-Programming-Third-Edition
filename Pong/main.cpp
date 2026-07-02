@@ -2,26 +2,31 @@
 #include <sstream>
 #include <cstdlib>
 #include <SFML/Graphics.hpp>
+#include <iostream>
 
 int main()
 {
     // Create a video mode object
     VideoMode vm({1920, 1080});
+
     // Create and open a window for the game
     RenderWindow window(vm, "pong", State::Fullscreen);
+    
     int score = 0;
     int lives = 3;
 
     // Create a bat a the bottom center of the screen
     Bat bat(1920 / 2, 1080 -20);
     // We will add a ball in the next chapter
-    // Create a Text object called HUD
-    Text hud;
     // A cool retry-style font
     Font font;
-    font.loadFromFile("fonts/DS-DIGIT.ttf");
-    // Set the font to our retro-style
-    hud.setFont(font);
+    if (!font.openFromFile("fonts/DS-DIGIT.ttf"))
+    {
+        std::cout << "No se pudo cargar la fuente\n";
+        return 1;
+    }
+     // Create a Text object called HUD
+    Text hud(font);
     // Make it nice and big
     hud.setCharacterSize(75);
     // Choose a color
@@ -46,12 +51,12 @@ int main()
         }
 
         // Handel the player quitting
-        if (Keyboard::isKeyPressed(Keyboard::Key::Escape));
+        if (Keyboard::isKeyPressed(Keyboard::Key::Escape))
         {
             window.close();
         }
         // Handle the pressing and releasing of the arrow keys
-        if (Keyboard::isKeyPressed(Keyboard::Key::A));
+        if (Keyboard::isKeyPressed(Keyboard::Key::A))
         {
             bat.moveLeft();
         }
@@ -60,9 +65,9 @@ int main()
             bat.stopLeft();
         }
 
-        if (Keyboard::isKeyPressed(Keyboard::Key::D));
+        if (Keyboard::isKeyPressed(Keyboard::Key::D))
         {
-            bat.moveRight;
+            bat.moveRight();
         }
         else
         {
@@ -74,6 +79,12 @@ int main()
         *************************
         *************************
         */
+       Time dt = clock.restart();
+       bat.update(dt);
+       // Update the HUD text
+       std::stringstream ss;
+       ss << "score:" << score << " lives:" << lives;
+       hud.setString(ss.str());
 
         /*
         Draw the bat, the ball and the HUD
@@ -81,6 +92,11 @@ int main()
         *************************
         *************************
         */
+
+        window.clear();
+        window.draw(hud);
+        window.draw(bat.getShape());
+        window.display();
 
 
     }

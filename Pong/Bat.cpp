@@ -33,7 +33,7 @@ void Bat::stopRight()
 {
     m_MovingRight = false;
 }
-void Bat::update(time dt)
+void Bat::update(Time dt)
 {
     if (m_MovingLeft) {
         m_Position.x -= m_Speed * dt.asSeconds();
