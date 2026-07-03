@@ -82,14 +82,48 @@ int main()
         *************************
         *************************
         */
-       Time dt = clock.restart();
-       bat.update(dt);
-       ball.update(dt);
-       // Update the HUD text
-       std::stringstream ss;
-       ss << "score:" << score << " lives:" << lives;
-       hud.setString(ss.str());
-
+        // Update the delta time
+        Time dt = clock.restart();
+        bat.update(dt);
+        ball.update(dt);
+        // Update the HUD text
+        std::stringstream ss;
+        ss << "score:" << score << " lives:" << lives;
+        hud.setString(ss.str());
+        // Handle ball hitting the bottom
+        if (ball.getPosition().position.y > window.getSize().y)
+        {
+            // reverse the ball direction
+            ball.reboundBottom();
+            // Remove a life
+            lives--;
+            // Check for zero lives
+            if (lives < 1) {
+                // reset the score
+                score = 0;
+                // re set the lives
+                lives = 3;
+            }
+        }
+        // Handle ball hitting top
+        if (ball.getPosition().position.y < 0)
+        {
+            ball.reboundBatOrTop();
+            // Add a point to the players score
+            score++; 
+        }
+        // Handle ball hitting sides
+        if (ball.getPosition().position.x < 0 ||
+            ball.getPosition().position.x + ball.getPosition().size.x> window.getSize().x)
+        {
+            ball.reboundSides();
+        }
+        // Has the ball hit the bat?
+        if (ball.getPosition().findIntersection(bat.getPosition()))
+        {
+            // Hit detected so reverse the ball and score a point
+            ball.reboundBatOrTop();
+        }
         /*
         Draw the bat, the ball and the HUD
         *************************
