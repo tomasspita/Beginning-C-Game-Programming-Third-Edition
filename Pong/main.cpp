@@ -110,7 +110,7 @@ int main()
         {
             ball.reboundBatOrTop();
             // Add a point to the players score
-            score++; 
+            score++;
         }
         // Handle ball hitting sides
         if (ball.getPosition().position.x < 0 ||
