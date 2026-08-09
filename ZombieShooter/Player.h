@@ -1,7 +1,7 @@
 #pragma once
 #include <sfml/Graphics.hpp>
 using namespace sf;
-class player
+class Player
 {
     private:
         const float START_SPEED = 200;
@@ -45,9 +45,9 @@ class player
         // Where is the player
         FloatRect getPosition();
         // Where is the center of the player
-        Vector2f getCencter();
+        Vector2f getCenter();
         // What angle is the player facing
-        float getRotation();
+        Angle getRotation();
         // Send a copy of the sprite to the main function
         Sprite getSprite();
         // The next four functions move the player
