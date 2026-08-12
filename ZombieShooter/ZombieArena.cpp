@@ -45,7 +45,130 @@ int main()
     // The main game loop
     while (window.isOpen())
     {
-    }
+        /*
+        ************
+        Handle input
+        ************
+        */
+        // Handle events by polling
+        while (window.pollEvent(Event))
+        {
+            if (event.type == Event::KeyPressed)
+            {
+                // Pause a game while playing
+                if (event.key.code == Keyboard::Key::Enter &&
+                    state == State::PLAYING)
+                {
+                    state = State::PAUSED;
+                }
+                // Restart while paused
+                else if(event.key.code == Keyboard::Key::Enter &&
+                    state == State::PAUSED)
+                {
+                    state = State::PLAYING;
+                    // Reset the clock so there isnt a frame jump
+                    clock.restart();
+                }  
+                // Start a new game while in GAME_OVER state
+                else if (event.key.code == Keyboard::Key::Enter &&
+                    state = State::GAME_OVER)
+                {
+                    state = State::LEVELING_UP;
+                }
+                if (state == State::PLAYING)
+                {
+                }
+            }
+        }// End the event polling
+        // Handle the player quitting
+        if (Keyboard::isKeyPressed(Keyboard::Key::Escape))
+        {
+            window.close();
+        }
+        // Handle WASD while playing
+        if (state == State::PLAYING)
+        {
+            // Handle the pressing and relasing of WASD keys
+            if (Keyboard::isKeyPressed(Keyboard::Key::W))
+            {
+                play.moveUp();
+            }
+            else
+            {
+                player.stopUp();
+            }
+            if (Keyboard::isKeyPressed(Keyboard::Key::S))
+            {
+                play.moveDown();
+            }
+            else
+            {
+                play.stopDown();
+            }
+            if (Keyboard::isKeyPressed(Keyboard::Key::A))
+            {
+                player.moveLeft();
+            }
+            else
+            {
+                player.stopLeft();
+            }
+            if (Keyboard::isKeyPressed(Keyboard::Key::D))
+            {
+                player.moveRight();
+            }
+            else
+            {
+                player.stopRight();
+            }
+        }// End WASD while playing
+        // Handle the LEVELING up state
+        if (state == State::LEVELING_UP)
+        {
+            // Handle the player LEVELING up
+            if (event.key.code == Keyboard::Key::Num1)
+            {
+                state = State::PLAYING;
+            }
+            if (event.key.code == Keyboard::Key::Num2)
+            {
+                state = State::PLAYING;
+            }
+            if (event.key.code == Keyboard::Key::Num3)
+            {
+                state = State::PLAYING;
+            }
+            if (event.key.code == Keyboard::Key::Num4)
+            {
+                state = State::PLAYING;
+            }
+            if (event.key.code == Keyboard::Key::Num5)
+            {
+                state = State::PLAYING;
+            }
+            if (event.key.code == Keyboard::Key::Num6)
+            {
+                state = State::PLAYING;
+            }
+            if (state == State::PLAYING)
+            {
+                // Prepare the level
+                // We will modify the next two lines later
+                arena.size.x = 500;
+                arena.size.y = 500;
+                arena.position.x = 0;
+                arena.position.y = 0;
+                // We will modify this line of code later
+                int tileSize = 50;
+                // Spawn the player in middle of the arena
+                player.spawn(arena, resolution, tileSize);
+
+                // Reset clock so there isnt a frame jump
+                clock.restart();
+            }
+        }// End LEVELING up
+    }// End game Loop
+
     
     return 0;
 }
