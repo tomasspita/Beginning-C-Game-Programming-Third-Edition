@@ -1,9 +1,14 @@
 #include "Player.h"
+#include <stdexcept>
+#include <iostream>
 
 Texture loadTexture(const std::__1::__fs::filesystem::path &filename)
 {
     Texture texture;
-    texture.loadFromFile(filename);
+    if (!texture.loadFromFile(filename))
+    {
+        throw std::runtime_error("Could not load texture");
+    }
     return texture;
 }
 
@@ -16,6 +21,7 @@ Player::Player()
 
     // m_Sprite()
 {
+
     // Associate a texture with the sprite
     // !!Watch this space!!
     // m_Texture.loadFromFile("grapchis/player.png");
@@ -25,6 +31,12 @@ Player::Player()
     // Set the origin of the sprite to the center,
     // for smooth rotation
     m_Sprite.setOrigin({25, 25});
+
+    std::cout<< "Texture size: "
+             << m_Texture.getSize().x
+             << " x "
+             << m_Texture.getSize().y
+             << std::endl;
 }
 void Player::spawn(IntRect arena, Vector2f resolution, int tileSize)
 {
@@ -104,7 +116,7 @@ void Player::moveDown()
 }
 void Player::stopLeft()
 {
-    m_RightPressed = false;
+    m_LeftPressed = false;
 }
 void Player::stopRight()
 {

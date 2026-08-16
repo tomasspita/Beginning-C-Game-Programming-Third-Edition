@@ -1,5 +1,5 @@
 #pragma once
-#include <sfml/Graphics.hpp>
+#include <SFML/Graphics.hpp>
 using namespace sf;
 class Player
 {
@@ -8,22 +8,22 @@ class Player
         const float START_HEALTH = 100;
         // Where is the player
         Vector2f m_Position;
+        // And a texture
+        Texture m_Texture;
+        // !!Watch this space - Changes here soon!!
+        // What is the screen resolution
         // The sprite
         Sprite m_Sprite;
-        // And a texture
-        // !!Watch this space - Changes here soon!!
-        Texture m_Texture;
-        // What is the screen resolution
         Vector2f m_Resolution;
         // What size is the current arena
         IntRect m_Arena;
         // How big is each tile of the arena
         int m_TileSize;
         // Which direction(s)the player is moving in
-        bool m_UpPressed;
-        bool m_DownPressed;
-        bool m_LeftPressed;
-        bool m_RightPressed;
+        bool m_UpPressed = false;
+        bool m_DownPressed = false;
+        bool m_LeftPressed = false;
+        bool m_RightPressed = false;
         // How much health has the player got?
         int m_Health;
         // What is the max' health the player can have
