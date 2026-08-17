@@ -8,3 +8,5 @@ g++ <carpetadeljuego/nombre_del_juego>.cpp -std=c++17 -lsfml-graphics -lsfml-win
 g++ main.cpp Bat.cpp -std=c++20 \
 -lsfml-graphics -lsfml-window -lsfml-system -lsfml-audio \
 -o ../output/Pong
+
+g++ <entrada.cpp> -std=c++20  -o <salida>
