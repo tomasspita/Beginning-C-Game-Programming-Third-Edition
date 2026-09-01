@@ -4,12 +4,12 @@
 Zombie* createHorde(int numZombies, IntRect arena)
 {
     Zombie* zombies = new Zombie[numZombies];
-    int maxY = arena.height - 20;
-    int minY = arena.top + 20;
-    int maxX = arena.width - 20;
-    int minX = arena.left - 20;
+    int maxY = arena.size.y - 20;
+    int minY = arena.position.y + 20;
+    int maxX = arena.size.x - 20;
+    int minX = arena.position.x - 20;
 
-    for (int i = 0; i < numZombies; 1++)
+    for (int i = 0; i < numZombies; i++)
     {
         
         //Which side should the zombie spawn

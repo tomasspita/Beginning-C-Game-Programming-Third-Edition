@@ -22,7 +22,7 @@ class Zombie
         // Where is this zombie
         Vector2f m_Position;
 
-        // How fast can this one run/crawl?
+        Texture m_Texture;
         Sprite m_Sprite;
 
         // How fast can this one run/crawl?
@@ -37,13 +37,14 @@ class Zombie
 
     // Public prototypes go here
     public:
+        Zombie();
 
         // Handle when a bullet hits a zombie
         bool hit();
 
         // Find out if the zombie is alive
         bool isAlive();
-
+ 
         // Spawn a new zombie
         void spawn(float startX, float startY, int type, int seed);
 

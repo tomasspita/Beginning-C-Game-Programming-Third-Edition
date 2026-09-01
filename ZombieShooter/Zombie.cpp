@@ -1,8 +1,14 @@
 #include "Zombie.h"
 #include "TextureHolder.h"
-#include "<cstdlib>"
-#include "<ctime>"
+#include "cstdlib"
+#include "ctime"
 using namespace std;
+
+
+Zombie::Zombie()
+    : m_Sprite(TextureHolder::GetTexture("graphics/bloater.png"))
+{
+}
 
 void Zombie::spawn(float startX, float startY, int type, int seed)
 {
@@ -12,7 +18,8 @@ void Zombie::spawn(float startX, float startY, int type, int seed)
         case 0:
 
         //Bloater
-        m_Sprite = Sprite(TextureHolder::GetTexture("graphics/bloater.png"));
+        // m_Sprite = Sprite(TextureHolder::GetTexture("graphics/bloater.png"));
+        m_Sprite.setTexture(TextureHolder::GetTexture("graphics/bloater.png"));
         m_Speed = BLOATER_SPEED;
         m_Health = BLOATER_HEALTH;
         break;
@@ -20,7 +27,8 @@ void Zombie::spawn(float startX, float startY, int type, int seed)
         case 1:
 
         // Chaser
-        m_Sprite = Sprite(TextureHolder::GetTexture("graphics/chaser.png"));
+        // m_Sprite = Sprite(TextureHolder::GetTexture("graphics/chaser.png"));
+        m_Sprite.setTexture(TextureHolder::GetTexture("graphics/chaser.png"));
         m_Speed = CHASER_SPEED;
         m_Health = CHASER_HEALTH;
         break;
@@ -28,7 +36,8 @@ void Zombie::spawn(float startX, float startY, int type, int seed)
         case 2:
         
         // Crawler
-        m_Sprite = Sprite(TextureHolder::GetTexture("graphics/crawler.png"));
+        // m_Sprite = Sprite(TextureHolder::GetTexture("graphics/crawler.png"));
+        m_Sprite.setTexture(TextureHolder::GetTexture("graphics/crawler.png"));
         m_Speed = CRAWLER_SPEED;
         m_Health = CRAWLER_HEALTH;
         break;
@@ -75,12 +84,12 @@ bool Zombie::isAlive()
     return m_Alive;
 }
 
-FloatRect Zombie::getPosition
+FloatRect Zombie::getPosition()
 {
-    return m_Sprite.getGlobalBounds
+    return m_Sprite.getGlobalBounds();
 }
 
-Sprite Zombie::getSPrite
+Sprite Zombie::getSprite()
 {
     return m_Sprite;
 }
@@ -113,7 +122,7 @@ void Zombie::update(float elapsedTime,Vector2f playerLocation)
     m_Sprite.setPosition(m_Position);
     
     // Face the sprite in the correct direction
-    float angle = (atan2(PlayerY - m_Position.y, playerX - m_Position.x)
+    float angle = (atan2(playerY - m_Position.y, playerX - m_Position.x)
         *180) / 3.141;
-    m_Sprite.setRotation(angle);
+    m_Sprite.setRotation(sf::degrees(angle));
 }

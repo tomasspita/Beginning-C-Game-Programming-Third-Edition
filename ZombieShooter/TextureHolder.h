@@ -19,6 +19,6 @@ class TextureHolder
     public:
         TextureHolder();
         static Texture& GetTexture(string const& filename);
-}
+};
 
-
+#endif
