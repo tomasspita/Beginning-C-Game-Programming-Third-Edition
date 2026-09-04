@@ -109,8 +109,8 @@ int main()
                             {
                                 // Prepare the level
                                 // We will modify the next two lines later
-                                arena.size.x = 500;
-                                arena.size.y = 500;
+                                arena.size.x = 5000;
+                                arena.size.y = 5000;
                                 arena.position.x = 0;
                                 arena.position.y = 0;
 
@@ -125,7 +125,7 @@ int main()
                                 player.spawn(arena, resolution, tileSize);
 
                                 // Create horde of zombies
-                                numZombies = 10;
+                                numZombies = 10000;
                                 // Delete the previously allocated memory (if it exists)
                                 delete[] zombies;
                                 zombies = createHorde(numZombies, arena);

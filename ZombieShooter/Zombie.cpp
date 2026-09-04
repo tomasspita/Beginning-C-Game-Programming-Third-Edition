@@ -12,6 +12,7 @@ Zombie::Zombie()
 
 void Zombie::spawn(float startX, float startY, int type, int seed)
 {
+    m_Alive = true;
 
     switch (type)
     {

@@ -1,13 +1,16 @@
 #include "ZombieArena.h"
 #include "Zombie.h"
 
+const int SPAWN_MARGIN = 75;
+
 Zombie* createHorde(int numZombies, IntRect arena)
 {
     Zombie* zombies = new Zombie[numZombies];
-    int maxY = arena.size.y - 20;
-    int minY = arena.position.y + 20;
-    int maxX = arena.size.x - 20;
-    int minX = arena.position.x - 20;
+    int maxY = arena.position.y + arena.size.y - SPAWN_MARGIN;
+    int minY = arena.position.y + SPAWN_MARGIN;
+
+    int maxX = arena.position.x + arena.size.x - SPAWN_MARGIN;
+    int minX = arena.position.x + SPAWN_MARGIN;
 
     for (int i = 0; i < numZombies; i++)
     {
@@ -22,24 +25,24 @@ Zombie* createHorde(int numZombies, IntRect arena)
             case 0:
                 // Left
                 x = minX;
-                y = (rand() % maxY) + minY;
+                y = (rand() % (maxY - minY)) + minY;
                 break;
             case 1:
 
                 // Right
                 x = maxX;
-                y = (rand() % maxY) + minY;
+                y = (rand() % (maxY - minY)) + minY;
                 break;
             case 2:
 
                 // Top
-                x = (rand() % maxX) + minX;
+                x = (rand() % (maxX - minX)) + minX;
                 y = minY;
                 break;
 
             case 3:
                 // Bottom
-                x = (rand() % maxX) + minX;
+                x = (rand() % (maxX - minX)) + minX;
                 y = maxY;
                 break;
 
