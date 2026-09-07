@@ -1,33 +1,15 @@
 #include "Player.h"
 #include <stdexcept>
 #include <iostream>
-
-Texture loadTexture(const std::__1::__fs::filesystem::path &filename)
-{
-    Texture texture;
-    if (!texture.loadFromFile(filename))
-    {
-        throw std::runtime_error("Could not load texture");
-    }
-    return texture;
-}
+#include "TextureHolder.h"
 
 Player::Player()
     : m_Speed(START_SPEED),
     m_Health(START_HEALTH),
     m_MaxHealth(START_HEALTH),
-    m_Texture(loadTexture("graphics/player.png")),
-    m_Sprite(m_Texture)
+    m_Sprite(TextureHolder::GetTexture("graphics/player.png"))
 
-    // m_Sprite()
 {
-
-    // Associate a texture with the sprite
-    // !!Watch this space!!
-    // m_Texture.loadFromFile("grapchis/player.png");
-    // m_Sprite.setTexture(m_Texture);
-    // m_Sprite(m_Texture);
-
     // Set the origin of the sprite to the center,
     // for smooth rotation
     m_Sprite.setOrigin({25, 25});
