@@ -2,6 +2,7 @@
 #include "Player.h"
 #include "ZombieArena.h"
 #include "TextureHolder.h"
+#include "Bullet.h"
 
 using namespace sf;
 
@@ -57,6 +58,16 @@ int main()
     int numZombiesAlive;
     Zombie* zombies = nullptr;
 
+    // 100 bullets should do
+    Bullet bullets[100];
+    int currentBullet = 0;
+    int bulletsSpare = 24;
+    int bulletsInClip = 6;
+    int clipSize = 6;
+    float fireRate = 1;
+    // When was the fire button lasts pressed?
+    Time lastPressed;
+
     // The main game loop
     while (window.isOpen())
     {
@@ -97,6 +108,26 @@ int main()
 
                 if (state == State::PLAYING)
                 {
+                    //Reloading
+                    if (keyPressed-> code == Keyboard::Key::R)
+                    {
+                        if (bulletsSpare >= clipSize)
+                        {
+                            // Plenty of bullets. Reload.
+                            bulletsInClip = clipSize;
+                            bulletsSpare -= clipSize;
+                        }
+                        else if (bulletsSpare > 0)
+                        {
+                            // Only few bullets left
+                            bulletsInClip = bulletsSpare;
+                            bulletsSpare = 0;
+                        }
+                        else
+                        {
+                            // More here soon?!
+                        }
+                    }
                 }
 
                 // Handle the player LEVELING up
@@ -209,6 +240,31 @@ int main()
             {
                 player.stopRight();
             }
+
+            // Fire a bullet
+            if (Mouse::isButtonPressed(sf::Mouse::Left))
+            {
+                if (gameTimeTotal.asMilliseconds()
+                    - lastPressed.asMilliseconds()
+                    > 1000 / fireRate && bulletsInClip > 0)
+                {
+                    // Pass the centre of the player
+                    // and the centre of the cross-hair
+                    // to the shoot function
+                    bullets[currentBullet].shoot(player.getCenter().x,
+                        player.getCenter().y,mouseWorldPosition.x, mouseWorldPosition.y);
+                    currentBullet++;
+                    if (currentBullet > 99)
+                    {
+                        currentBullet = 0;
+                    }
+                    lastPressed = gameTimeTotal;
+                    BulletsInClip--;
+                }
+            }// End fire a bullet
+        
+
+
         } // End WASD while playing
 
         // Handle the LEVELING up state
