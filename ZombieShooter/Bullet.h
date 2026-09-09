@@ -38,9 +38,9 @@ class Bullet
             float xTarget, float yTarget);
         // Tell the calling code where
         // the bullet is in the world
-        FLoatRect getPosition();
+        FloatRect getPosition();
         // Return the actual shape (for drawing)
         RectangleShape getShape();
         // Update the bullet each frame
         void update(float elapsedTime);
-}
+};

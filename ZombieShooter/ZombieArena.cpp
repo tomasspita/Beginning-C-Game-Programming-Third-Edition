@@ -67,6 +67,11 @@ int main()
     float fireRate = 1;
     // When was the fire button lasts pressed?
     Time lastPressed;
+    // Hide the mouse pointer and replace it with crosshair
+    window.setMouseCursorVisible(true);
+    Texture textureCrosshair = TextureHolder::GetTexture("graphics/crosshair.png");
+    Sprite spriteCrosshair(textureCrosshair);
+    spriteCrosshair.setOrigin({25, 25});
 
     // The main game loop
     while (window.isOpen())
@@ -242,7 +247,7 @@ int main()
             }
 
             // Fire a bullet
-            if (Mouse::isButtonPressed(sf::Mouse::Left))
+            if (Mouse::isButtonPressed(sf::Mouse::Button::Left))
             {
                 if (gameTimeTotal.asMilliseconds()
                     - lastPressed.asMilliseconds()
@@ -259,7 +264,7 @@ int main()
                         currentBullet = 0;
                     }
                     lastPressed = gameTimeTotal;
-                    BulletsInClip--;
+                    bulletsInClip--;
                 }
             }// End fire a bullet
         
@@ -314,6 +319,9 @@ int main()
                 mainView
             );
 
+            // Set the crosshair to the mouse world Location
+            spriteCrosshair.setPosition(mouseWorldPosition);
+
             // Update the player
             // player.update(dtAsSeconds, mouseWorldPosition);
             player.update(dtAsSeconds, Mouse::getPosition());
@@ -331,6 +339,15 @@ int main()
                 if (zombies[i].isAlive())
                 {
                     zombies[i].update(dt.asSeconds(), playerPosition);
+                }
+            }
+
+            // Update any bullets that are in-flight
+            for (int i = 0; i < 100; i++)
+            {
+                if (bullets[i].isInFlight())
+                {
+                    bullets[i].update(dtAsSeconds);
                 }
             }
 
@@ -359,8 +376,19 @@ int main()
                 window.draw(zombies[i].getSprite());
             }
 
+            for (int i = 0; i < 100; i++)
+            {
+                if (bullets[i].isInFlight())
+                {
+                    window.draw(bullets[i].getShape());
+                }
+            }
+
             // Draw the player
             window.draw(player.getSprite());
+
+            // Draw the crosshair
+            window.draw(spriteCrosshair);
         }
 
         if (state == State::LEVELING_UP)

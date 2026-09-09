@@ -3,7 +3,7 @@
 // The constructor
 Bullet::Bullet()
 {
-    m_BulletShape.setSize(sf::Vector2f(2, 2));
+    m_BulletShape.setSize(sf::Vector2f(8, 5));
 }
 
 void Bullet::shoot(float startX, float startY, float targetX, float targetY)
@@ -26,7 +26,7 @@ void Bullet::shoot(float startX, float startY, float targetX, float targetY)
     m_BulletDistanceX = ratioXY * gradient;
 
     // Point the bullet in the right direction
-    if (targetX > startX)
+    if (targetX < startX)
     {
         m_BulletDistanceX *= -1;
     }
@@ -66,7 +66,7 @@ RectangleShape Bullet::getShape()
     return m_BulletShape;
 }
 
-void Bullet::≤````(float elapsedTime)
+void Bullet::update(float elapsedTime)
 {
     // Update the bullet position variables
     m_Position.x += m_BulletDistanceX * elapsedTime;
