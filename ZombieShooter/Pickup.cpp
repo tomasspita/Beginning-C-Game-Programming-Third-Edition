@@ -2,27 +2,16 @@
 #include "TextureHolder.h"
 
 Pickup::Pickup(int type)
-    : m_Type{ type }
+    : m_Type{ type },
+    m_Sprite{ TextureHolder::GetTexture(type == 1 
+                    ? "graphics/health_pickup.png" 
+                    : "graphics/ammo_pickup.png") }
 {
-     // Associate the texture with the sprite
-     if (m_Type == 1)
-     {
-         m_Sprite = Sprite(TextureHolder::GetTExture(
-             "graphics/health_pickup.png"));
+     
+    m_Type == 1 ? m_Value = HEALTH_START_VALUE : m_Value = AMMO_START_VALUE;
+    
 
-         // How muchs is pickup worth
-         m_Value = HEALTH_START_VALUE;
-     }
-    else
-    {
-        m_Sprite = Sprite(TextureHOlder::GetTexture(
-            "grapchis/ammo_pickup.png"));
-
-            // How muchs is pickup worth
-            m_Value = AMMO_START_VALUE;
-    }
-
-    m_Sprite.setOrigin(25 ,25);
+    m_Sprite.setOrigin({25 ,25});
     m_SecondsToLive = START_SECONDS_TO_LIVE;
     m_SecondsToWait = START_WAIT_TIME;
 }
@@ -33,9 +22,9 @@ void Pickup::setArena(IntRect arena)
     const int SPAWN_MARGIN{ 50 }; 
     
     m_Arena.position.y = arena.position.y + SPAWN_MARGIN;
-    m_Arena.size.y = arena.size.y + SPAWN_MARGIN;
+    m_Arena.size.y = arena.size.y - SPAWN_MARGIN;
     m_Arena.position.x = arena.position.x + SPAWN_MARGIN;
-    m_Arena.size.x = arena.size.x + SPAWN_MARGIN;
+    m_Arena.size.x = arena.size.x - SPAWN_MARGIN;
 
     spawn();
     
@@ -45,15 +34,15 @@ void Pickup::spawn()
 {
     // Spawn at a random location
     srand((int)time(0) / m_Type);
-    int x = (rand() % m_Arena.size.x);
+    float x = (rand() % m_Arena.size.x);
 
     srand((int)time(0) * m_Type);
-    int y = (rand() % m_Arena.size.y);
+    float y = (rand() % m_Arena.size.y);
 
     m_SecondsSinceSpawn = 0;
     m_Spawned = true;
 
-    m_Sprite.setPosition(x, y);
+    m_Sprite.setPosition({x, y});
 }
 
 FloatRect Pickup::getPosition()

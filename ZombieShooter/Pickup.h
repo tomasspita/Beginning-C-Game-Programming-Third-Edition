@@ -45,7 +45,7 @@ class Pickup
         FloatRect getPosition();
 
         // Get the sprite for drawing
-        Srpite getSprite();
+        Sprite getSprite();
 
         // Let the pickup update itself each frame
         void update(float elapsedTime);

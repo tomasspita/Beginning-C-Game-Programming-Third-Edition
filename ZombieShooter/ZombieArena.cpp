@@ -3,6 +3,7 @@
 #include "ZombieArena.h"
 #include "TextureHolder.h"
 #include "Bullet.h"
+#include "Pickup.h"
 
 using namespace sf;
 
@@ -72,6 +73,10 @@ int main()
     Texture textureCrosshair = TextureHolder::GetTexture("graphics/crosshair.png");
     Sprite spriteCrosshair(textureCrosshair);
     spriteCrosshair.setOrigin({25, 25});
+
+    // Create a couple of pickups
+    Pickup healthPickup(1);
+    Pickup ammoPickup(2);
 
     // The main game loop
     while (window.isOpen())
@@ -145,8 +150,8 @@ int main()
                             {
                                 // Prepare the level
                                 // We will modify the next two lines later
-                                arena.size.x = 5000;
-                                arena.size.y = 5000;
+                                arena.size.x = 1250;
+                                arena.size.y = 1250;
                                 arena.position.x = 0;
                                 arena.position.y = 0;
 
@@ -160,8 +165,12 @@ int main()
                                 // Spawn the player in middle of the arena
                                 player.spawn(arena, resolution, tileSize);
 
+                                // Configure the pick-ups
+                                healthPickup.setArena(arena);
+                                ammoPickup.setArena(arena);
+
                                 // Create horde of zombies
-                                numZombies = 10000;
+                                numZombies = 2500;
                                 // Delete the previously allocated memory (if it exists)
                                 delete[] zombies;
                                 zombies = createHorde(numZombies, arena);
@@ -333,7 +342,7 @@ int main()
             // the around player
             mainView.setCenter(player.getCenter());
 
-            // Loop trhough each Zombie and update them
+            // Loop through each Zombie and update them
             for (int i = 0; i < numZombies; i++)
             {
                 if (zombies[i].isAlive())
@@ -351,6 +360,9 @@ int main()
                 }
             }
 
+            // update the pickups
+            healthPickup.update(dtAsSeconds);
+            ammoPickup.update(dtAsSeconds);
         } // End updating the scene
 
         /*
@@ -386,6 +398,17 @@ int main()
 
             // Draw the player
             window.draw(player.getSprite());
+
+            // Draw the pick-ups, if currently spawned
+            if (ammoPickup.isSpawned())
+            {
+                window.draw(ammoPickup.getSprite());
+            }
+
+            if (healthPickup.isSpawned())
+            {
+                window.draw(healthPickup.getSprite());
+            }
 
             // Draw the crosshair
             window.draw(spriteCrosshair);
