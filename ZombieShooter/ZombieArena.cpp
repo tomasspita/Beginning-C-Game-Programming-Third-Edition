@@ -7,6 +7,7 @@
 #include "Pickup.h"
 
 using namespace sf;
+using namespace std;
 
 int main()
 {
@@ -84,48 +85,45 @@ int main()
     int hiScore = 0; 
 
     // For the home/game over screen
-    Sprite spriteGameOver;
-    Texture textureGameOver = TextureHolder::getTexture("graphics/bckground.png");
+    Texture textureGameOver = TextureHolder::GetTexture("graphics/background.png");
+    Sprite spriteGameOver(textureGameOver);
     spriteGameOver.setTexture(textureGameOver);
     spriteGameOver.setPosition({0, 0});
 
     // Create a view for the HUD
-    View hudView(sf::FloatRect(0, 0, 1920, 1080));
+    View hudView(sf::FloatRect({0, 0}, {1920, 1080}));
 
     // Create a sprite for the ammo icon
-    Sprite spriteAmmoIcon;
     Texture textureAmmoIcon = TextureHolder::GetTexture("graphics/ammo_icon.png");
+    Sprite spriteAmmoIcon(textureAmmoIcon);
     spriteAmmoIcon.setTexture(textureAmmoIcon);
     spriteAmmoIcon.setPosition({20, 980});
 
     // Load the font
     Font font;
-    font.loadFromFile("fonts/zombiecontrol.ttf");
+    font.openFromFile("fonts/zombiecontrol.ttf");
 
     // Paused
-    Text pausedText;
-    pausedText.setFont(font);
+    Text pausedText(font);
     pausedText.setCharacterSize(155);
     pausedText.setFillColor(Color::White);
-    pausedText.setPosition({400, 400})
-    pusedText.setString("Press Enter \nto continue");
+    pausedText.setPosition({400, 400});
+    pausedText.setString("Press Enter \nto continue");
 
     // Game Over
-    Text gameOverText;
-    gameOverText.setFont(font);
+    Text gameOverText(font);
     gameOverText.setCharacterSize(125);
     gameOverText.setFillColor(Color::White);
     gameOverText.setPosition({250, 860});
     gameOverText.setString("Press Enter to play");
 
     // LEVELING UP
-    Text levelUpText;
-    levelUpText.setFont(font);
+    Text levelUpText(font);
     levelUpText.setCharacterSize(80);
     levelUpText.setFillColor(Color::White);
     levelUpText.setPosition({150, 250});
     std::stringstream levelUpStream;
-    level upStream <<
+   levelUpStream <<
     "1- Increased rate of fire" <<
     "\n2- Increased clip size(next reaload)" <<
     "\n3- Increased max health" <<
@@ -135,22 +133,19 @@ int main()
     levelUpText.setString(levelUpStream.str());
 
     // Ammo
-    Text ammoText;
-    ammoText.setFont(font);
+    Text ammoText(font);
     ammoText.setCharacterSize(55);
     ammoText.setFillColor(Color::White);
     ammoText.setPosition({200, 980});
 
     // Score
-    Text scoreText;
-    scoreText.setFont(font);
+    Text scoreText(font);
     scoreText.setCharacterSize(55);
     scoreText.setFillColor(Color::White);
     scoreText.setPosition({20 ,0});
 
     // Hi score
-    Text hiScoreText;
-    hiScoreText.setFont(font);
+    Text hiScoreText(font);
     hiScoreText.setCharacterSize(55);
     hiScoreText.setFillColor(Color::White);
     hiScoreText.setPosition({1400, 0});
@@ -159,17 +154,16 @@ int main()
     hiScoreText.setString(s.str());
 
     // Zombies remaining
-    Text zombiesRemainingText;
-    zombiesRemainingText.setFont(font);
+    Text zombiesRemainingText(font);
+
     zombiesRemainingText.setCharacterSize(55);
     zombiesRemainingText.setFillColor(Color::White);
-    zombiesRemainingText.setPosition({1250, 980});
+    zombiesRemainingText.setPosition({1500, 980});
     zombiesRemainingText.setString("Zombies: 100");
 
     // Wave number
-    int wave = 0;
-    Text waveNumberText;
-    waveNumberText.setFont(font);
+    int wave = 10;
+    Text waveNumberText(font);
     waveNumberText.setCharacterSize(55);
     waveNumberText.setFillColor(Color::White);
     waveNumberText.setPosition({1250, 980});
@@ -179,6 +173,11 @@ int main()
     RectangleShape healthBar;
     healthBar.setFillColor(Color::Red);
     healthBar.setPosition({450, 980});
+
+    // When did we last update the HUD?
+    int framesSinceLastHUDUpdate = 0;
+    // How often (in frames) should we update the HUD
+    int fpsMeasurementFrameInterval = 1000;
     
 
     // The main game loop
@@ -266,6 +265,11 @@ int main()
                                 // int tileSize = 50;
 
                                 // Spawn the player in middle of the arena
+                                player.resetPlayerStats();
+
+                                bulletsInClip = clipSize;
+                                bulletsSpare = 24;
+                                
                                 player.spawn(arena, resolution, tileSize);
 
                                 // Configure the pick-ups
@@ -532,6 +536,37 @@ int main()
                 bulletsSpare += ammoPickup.gotIt();
             }
 
+            // size up the health bar
+            healthBar.setSize(Vector2f(player.getHealth() * 3, 50));
+            // Increment then umber of frames since the previous update
+            framesSinceLastHUDUpdate++;
+            // re-calculate every fpsMeasurementFrameinterval frames
+            if (framesSinceLastHUDUpdate > fpsMeasurementFrameInterval)
+            {
+                // Update game HUD text
+                stringstream ssAmmo;
+                stringstream ssScore;
+                stringstream ssHiScore;
+                stringstream ssWave;
+                stringstream ssZombiesAlive;
+                // Update the ammo text
+                ssAmmo << bulletsInClip << "/" << bulletsSpare;
+                ammoText.setString(ssAmmo.str());
+                // Update the score text
+                ssScore << "Score:" << score;
+                scoreText.setString(ssScore.str());
+                // Update the high score text
+                ssHiScore << "Hi Score:" << hiScore;
+                hiScoreText.setString(ssHiScore.str());
+                // Update the wave
+                ssWave << "Wave:" << wave;
+                waveNumberText.setString(ssWave.str());
+                // Update the high score text
+                ssZombiesAlive << "Zombies:" << numZombiesAlive;
+                zombiesRemainingText.setString(ssZombiesAlive.str());
+                framesSinceLastHUDUpdate = 0;
+            }// End HUD update
+
         } // End updating the scene
 
         /*
@@ -542,7 +577,7 @@ int main()
 
         window.clear();
 
-        if (state == State::PLAYING)
+        if (state == State::PLAYING || state == State::PAUSED)
         {
             // set the mainView to be displayed in the window
             // And draw everything related to it
@@ -581,18 +616,40 @@ int main()
 
             // Draw the crosshair
             window.draw(spriteCrosshair);
+
+            // Switch the HUD view
+            window.setView(hudView);
+            // Draw all the HUD elements
+            window.draw(spriteAmmoIcon);
+            window.draw(ammoText);
+            window.draw(scoreText);
+            window.draw(hiScoreText);
+            window.draw(healthBar);
+            window.draw(waveNumberText);
+            window.draw(zombiesRemainingText);
         }
 
         if (state == State::LEVELING_UP)
         {
+            window.setView(hudView);
+
+            window.draw(spriteGameOver);
+            window.draw(levelUpText);
         }
 
         if (state == State::PAUSED)
         {
+            window.draw(pausedText);
         }
 
         if (state == State::GAME_OVER)
         {
+            window.setView(hudView);
+
+            window.draw(spriteGameOver);
+            window.draw(gameOverText);
+            window.draw(scoreText);
+            window.draw(hiScoreText);
         }
 
         window.display();
