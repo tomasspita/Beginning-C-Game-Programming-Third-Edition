@@ -1,5 +1,6 @@
 #include <fstream>
 #include <sstream>
+#include <SFML/Audio.hpp>
 #include <SFML/Graphics.hpp>
 #include "Player.h"
 #include "ZombieArena.h"
@@ -192,6 +193,35 @@ int main()
     int framesSinceLastHUDUpdate = 0;
     // How often (in frames) should we update the HUD
     int fpsMeasurementFrameInterval = 1000;
+    // Prepare the hit sound
+    SoundBuffer hitBuffer;
+    hitBuffer.loadFromFile("sound/hit.wav");
+    Sound hit(hitBuffer);
+    // Prepare the splat sound
+    SoundBuffer splatBuffer;
+    splatBuffer.loadFromFile("sound/splat.wav");
+    Sound splat(splatBuffer);
+    // Prepare the shoot sound
+    SoundBuffer shootBuffer;
+    shootBuffer.loadFromFile("sound/shoot.wav");
+    Sound shoot(shootBuffer);
+    // Prepare the relad sound
+    SoundBuffer reloadBuffer;
+    reloadBuffer.loadFromFile("sound/reload.wav");
+    Sound reload(reloadBuffer);
+    // Prepare the failed sound
+    SoundBuffer reloadFailedBuffer;
+    reloadFailedBuffer.loadFromFile("sound/reload_failed.wav");
+    Sound reloadFailed(reloadFailedBuffer);
+    // Prepare the powerup sound
+    SoundBuffer powerupBuffer;
+    powerupBuffer.loadFromFile("sound/powerup.wav");
+    Sound powerup(powerupBuffer);
+    // Prepare the pickup sound
+    SoundBuffer pickupBuffer;
+    pickupBuffer.loadFromFile("sound/pickup.wav");
+    Sound pickup(pickupBuffer);
+
     
 
     // The main game loop
@@ -261,45 +291,7 @@ int main()
                 {
                     if (keyPressed->code == Keyboard::Key::Num1)
                     {
-                        state = State::PLAYING;
-                         if (state == State::PLAYING)
-                            {
-                                // Prepare the level
-                                // We will modify the next two lines later
-                                arena.size.x = 1250;
-                                arena.size.y = 1250;
-                                arena.position.x = 0;
-                                arena.position.y = 0;
-
-                                // Pass the vertex array by reference
-                                // to the createBackground function
-                                int tileSize =createBackground(background, arena);
-
-                                // We will modify this line of code later
-                                // int tileSize = 50;
-
-                                // Spawn the player in middle of the arena
-                                player.resetPlayerStats();
-
-                                bulletsInClip = clipSize;
-                                bulletsSpare = 24;
-                                
-                                player.spawn(arena, resolution, tileSize);
-
-                                // Configure the pick-ups
-                                healthPickup.setArena(arena);
-                                ammoPickup.setArena(arena);
-
-                                // Create horde of zombies
-                                numZombies = 6;
-                                // Delete the previously allocated memory (if it exists)
-                                delete[] zombies;
-                                zombies = createHorde(numZombies, arena);
-                                numZombiesAlive = numZombies;
-
-                                // Reset clock so there isnt a frame jump
-                                clock.restart();
-                            } // End LEVELING up
+                    
                     }
 
                     if (keyPressed->code == Keyboard::Key::Num2)
@@ -326,7 +318,7 @@ int main()
                     {
                         state = State::PLAYING;
                     }
-                }
+                } // End LEVELING up
             }
         } // End the event polling
 
