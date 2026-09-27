@@ -1,3 +1,4 @@
+#include <fstream>
 #include <sstream>
 #include <SFML/Graphics.hpp>
 #include "Player.h"
@@ -5,6 +6,7 @@
 #include "TextureHolder.h"
 #include "Bullet.h"
 #include "Pickup.h"
+
 
 using namespace sf;
 using namespace std;
@@ -143,6 +145,16 @@ int main()
     scoreText.setCharacterSize(55);
     scoreText.setFillColor(Color::White);
     scoreText.setPosition({20 ,0});
+    
+    
+    // Load the high score form a text file
+    std::ifstream inputFile("gamedata/scores.txt");
+    if (inputFile.is_open())
+    {
+        // >> Reads the data
+        inputFile >> hiScore;
+        inputFile.close();
+    }
 
     // Hi score
     Text hiScoreText(font);
@@ -152,6 +164,8 @@ int main()
     std::stringstream s;
     s << "Hi score:" << hiScore;
     hiScoreText.setString(s.str());
+
+
 
     // Zombies remaining
     Text zombiesRemainingText(font);
@@ -518,6 +532,11 @@ int main()
                     if (player.getHealth() <= 0)
                     {
                         state = State::GAME_OVER;
+                        score = 0;
+                        std::ofstream outputFile("gamedata/scores.txt");
+                        // << writes the data
+                        outputFile << hiScore;
+                        outputFile.close();
                     }
                 }
             }// End player touched
@@ -645,7 +664,6 @@ int main()
         if (state == State::GAME_OVER)
         {
             window.setView(hudView);
-
             window.draw(spriteGameOver);
             window.draw(gameOverText);
             window.draw(scoreText);
