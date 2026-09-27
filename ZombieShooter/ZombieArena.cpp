@@ -177,7 +177,7 @@ int main()
     zombiesRemainingText.setString("Zombies: 100");
 
     // Wave number
-    int wave = 10;
+    int wave = 0;
     Text waveNumberText(font);
     waveNumberText.setCharacterSize(55);
     waveNumberText.setFillColor(Color::White);
@@ -291,33 +291,82 @@ int main()
                 {
                     if (keyPressed->code == Keyboard::Key::Num1)
                     {
-                    
+                        // Increase fire rate
+                        fireRate++;
+                        state = State::PLAYING;
                     }
 
                     if (keyPressed->code == Keyboard::Key::Num2)
                     {
+                        // Increase clip size
+                        clipSize += clipSize;
                         state = State::PLAYING;
                     }
 
                     if (keyPressed->code == Keyboard::Key::Num3)
                     {
+                        // Increase health
+                        player.upgradeHealth();
                         state = State::PLAYING;
                     }
 
                     if (keyPressed->code == Keyboard::Key::Num4)
                     {
+                        // Increase speed
+                        player.upgradeSpeed();
                         state = State::PLAYING;
                     }
 
                     if (keyPressed->code == Keyboard::Key::Num5)
                     {
+                        // Upgrade pickup
+                        healthPickup.upgrade();
                         state = State::PLAYING;
                     }
 
                     if (keyPressed->code == Keyboard::Key::Num6)
                     {
+                        // Upgrade pickup
+                        healthPickup.upgrade();
                         state = State::PLAYING;
                     }
+
+                    if (state == State::PLAYING)
+                    {
+                        // Increase the wave number
+                        wave++;
+                        // Prepare the level
+                        // We will modify the next two lines later
+                        arena.size.x = 500 * wave;
+                        arena.size.y = 500 * wave;
+                        arena.position.x = 0;
+                        arena.position.y = 0;
+                        // Pass the vertex array by reference
+                        // to the createBackground function
+                        int tileSize =createBackground(background, arena);
+                        // We will modify this line of code later
+                        // int tileSize = 50;
+                        // Spawn the player in middle of the arena
+                        player.resetPlayerStats();
+                        bulletsInClip = clipSize;
+                        bulletsSpare = 24;
+                        
+                        player.spawn(arena, resolution, tileSize);
+                        // Configure the pick-ups
+                        healthPickup.setArena(arena);
+                        ammoPickup.setArena(arena);
+                        // Create horde of zombies
+                        numZombies = 5 * wave;
+                        // Delete the previously allocated memory (if it exists)
+                        delete[] zombies;
+                        zombies = createHorde(numZombies, arena);
+                        numZombiesAlive = numZombies;
+                        // Play the powerup sound
+                        powerup.play();
+                        // Reset clock so there isnt a frame jump
+                        clock.restart();
+  
+                    } 
                 } // End LEVELING up
             }
         } // End the event polling
