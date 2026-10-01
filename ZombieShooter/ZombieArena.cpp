@@ -260,6 +260,16 @@ int main()
                          state == State::GAME_OVER)
                 {
                     state = State::LEVELING_UP;
+                    wave = 0;
+                    score = 0;
+                     // Prepare the gun and ammo for next game
+                    currentBullet = 0;
+                    bulletsSpare = 24;
+                    bulletsInClip = 6;
+                    clipSize = 6;
+                    fireRate = 1;
+                    // Reset the player's stats
+                    player.resetPlayerStats();
                 }
 
                 if (state == State::PLAYING)
@@ -326,7 +336,7 @@ int main()
 
                     if (keyPressed->code == Keyboard::Key::Num6)
                     {
-                        // Upgrade pickup
+                        // Upgrade pickup 
                         healthPickup.upgrade();
                         state = State::PLAYING;
                     }
