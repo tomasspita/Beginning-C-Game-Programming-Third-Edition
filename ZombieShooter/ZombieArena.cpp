@@ -282,16 +282,19 @@ int main()
                             // Plenty of bullets. Reload.
                             bulletsInClip = clipSize;
                             bulletsSpare -= clipSize;
+                            reload.play();
                         }
                         else if (bulletsSpare > 0)
                         {
                             // Only few bullets left
                             bulletsInClip = bulletsSpare;
                             bulletsSpare = 0;
+                            reload.play();
                         }
                         else
                         {
                             // More here soon?!
+                            reloadFailed.play();
                         }
                     }
                 }
@@ -337,7 +340,7 @@ int main()
                     if (keyPressed->code == Keyboard::Key::Num6)
                     {
                         // Upgrade pickup 
-                        healthPickup.upgrade();
+                        ammoPickup.upgrade();
                         state = State::PLAYING;
                     }
 
@@ -445,6 +448,7 @@ int main()
                         currentBullet = 0;
                     }
                     lastPressed = gameTimeTotal;
+                    shoot.play();
                     bulletsInClip--;
                 }
             }// End fire a bullet
@@ -565,6 +569,8 @@ int main()
                                     state = State::LEVELING_UP;
                                 }
                             }
+                            // Make a splat sound
+                            splat.play();
                         }
                     }
                 }
@@ -579,6 +585,7 @@ int main()
                     if (player.hit(gameTimeTotal))
                     {
                         // More here later
+                        hit.play();
                     }
                     if (player.getHealth() <= 0)
                     {
@@ -597,6 +604,8 @@ int main()
                  && healthPickup.isSpawned())
             {
                 player.increaseHealthLevel(healthPickup.gotIt());
+                // Play a sound
+                pickup.play();
             }
 
             // Has the player touched ammo pickup
@@ -604,6 +613,8 @@ int main()
                  && ammoPickup.isSpawned())
             {
                 bulletsSpare += ammoPickup.gotIt();
+                // Play a sound
+                reload.play();
             }
 
             // size up the health bar
